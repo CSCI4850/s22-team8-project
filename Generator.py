@@ -57,7 +57,8 @@ class Generator:
             recipes.append(recipe) # append makes recipes var a 3D matrix
         
         self.recipes = np.array(recipes)
-        self.quant = np.array(quant).reshape(self.recipes.shape[0],self.recipes.shape[1],1)
+        #self.quant = np.array(quant).reshape(self.recipes.shape[0],self.recipes.shape[1],1)
+        self.quant = np.array(quant).reshape((-1,self.recipes.shape[1]))
 
     # scales each ingredient randomly lower bound and upper bound
     #   arg1 (min_scale): lower bound scale value
