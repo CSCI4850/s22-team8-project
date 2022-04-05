@@ -57,7 +57,6 @@ class Generator:
             recipes.append(recipe) # append makes recipes var a 3D matrix
         
         self.recipes = np.array(recipes)
-        #self.quant = np.array(quant).reshape(self.recipes.shape[0],self.recipes.shape[1],1)
         self.quant = np.array(quant).reshape((-1,self.recipes.shape[1]))
 
     # scales each ingredient randomly lower bound and upper bound
@@ -73,3 +72,27 @@ class Generator:
                 self.recipes[i,j] *= scalefactor
                 self.quant[i,j] *= scalefactor
                 
+
+    
+    def rank(self):
+        ranked = np.zeros((self.quant.shape))
+        
+
+        argsort = np.argsort(self.quant)[:,::-1]
+        
+        for i in range(0, argsort.shape[0]):
+            count = self.quant.shape[1]
+            ranked[i,argsort[i,0]] = count
+            
+            for j in range(1, argsort.shape[1]):
+                ind1 = argsort[i,j-1]
+                ind2 = argsort[i,j]
+
+                if self.quant[i,ind1] != self.quant[i,ind2]:
+                    count -= 1
+                
+                ranked[i,ind2] = count
+
+        ranked = ranked.reshape((self.recipes.shape[0], self.recipes.shape[1], 1))
+        self.recipes = np.concatenate((self.recipes,ranked), axis = 2)
+        
