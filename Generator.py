@@ -76,20 +76,17 @@ class Generator:
     
     def rank(self):
         ranked = np.zeros((self.quant.shape))
-        
-
         argsort = np.argsort(self.quant)[:,::-1]
         
         for i in range(0, argsort.shape[0]):
-            count = self.quant.shape[1]
+            count = self.quant.shape[1] - 1
             ranked[i,argsort[i,0]] = count
             
             for j in range(1, argsort.shape[1]):
                 ind1 = argsort[i,j-1]
                 ind2 = argsort[i,j]
 
-                if self.quant[i,ind1] != self.quant[i,ind2]:
-                    count -= 1
+                count -= 1
                 
                 ranked[i,ind2] = count
 
