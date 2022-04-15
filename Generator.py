@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import csv
+from sklearn.preprocessing import MinMaxScaler
 
 class Generator:
     
@@ -17,6 +18,7 @@ class Generator:
          
         self.recipes = None
         self.quant = None
+        self.scalers = {}
         
 
     # Generates n number of training examples
@@ -56,6 +58,7 @@ class Generator:
             recipe = np.reshape(recipe,self.ingrs.shape)
             recipes.append(recipe) # append makes recipes var a 3D matrix
         
+        
         self.recipes = np.array(recipes)
         self.quant = np.array(quant).reshape((-1,self.recipes.shape[1]))
 
@@ -68,11 +71,36 @@ class Generator:
         for i, recipe in enumerate(self.recipes):
             for j, ingr in enumerate(recipe):
                 scalefactor = round(random.uniform(min_scale,max_scale),2)
+                if self.normalize:
+                    scalefactor *= (max_scale-min_scale)/max_scale
+                
                 
                 self.recipes[i,j] *= scalefactor
                 self.quant[i,j] *= scalefactor
                 
 
+    def inv_normalize(self, quant=None):
+        
+        if quant is None:
+            for ind, recipe in enumerate(self.recipes):
+                self.recipes[ind] = self.scalers['recipes'].inverse_transform(recipe)
+
+            self.quant = (self.scalers['quant'].inverse_transform(self.quant.T)).T
+            
+        else:
+            quant = (self.scalers['quant'].inverse_transform(quant.T)).T
+            return quant
+                
+    def normalize(self):
+        
+        for ind, recipe in enumerate(self.recipes):
+            self.scalers['recipes'] = MinMaxScaler()
+            self.scalers['recipes'].fit(recipe)
+            self.recipes[ind] = self.scalers['recipes'].transform(recipe)
+        
+        self.scalers['quant'] = MinMaxScaler()
+        self.scalers['quant'].fit(self.quant.T)
+        self.quant = (self.scalers['quant'].transform(self.quant.T)).T
     
     def rank(self):
         ranked = np.zeros((self.quant.shape))
@@ -90,6 +118,8 @@ class Generator:
                 
                 ranked[i,ind2] = count
 
+            
+            
         ranked = ranked.reshape((self.recipes.shape[0], self.recipes.shape[1], 1))
         self.recipes = np.concatenate((self.recipes,ranked), axis = 2)
         
