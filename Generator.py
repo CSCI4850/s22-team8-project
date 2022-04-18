@@ -15,7 +15,8 @@ class Generator:
         self.nutrients = data[0] # get top row (name of the nutrients)
         self.names = data[:,0] # get left column (name of the ingredients)
         self.ingrs = np.array(data[1:,1:],dtype=float) # split array leaving only data, convert data to float
-         
+        self.ingrs /= 100 #scale by 1g instead of 100g
+            
         self.recipes = None
         self.quant = None
         self.scalers = {}
@@ -80,10 +81,9 @@ class Generator:
                 
 
     def inv_normalize(self, quant=None):
-        
         if quant is None:
             for ind, recipe in enumerate(self.recipes):
-                self.recipes[ind] = self.scalers['recipes'].inverse_transform(recipe)
+                self.recipes[ind] = self.scalers['recipes'][ind].inverse_transform(recipe)
 
             self.quant = (self.scalers['quant'].inverse_transform(self.quant.T)).T
             
@@ -92,11 +92,12 @@ class Generator:
             return quant
                 
     def normalize(self):
+        self.scalers['recipes'] = []
         
         for ind, recipe in enumerate(self.recipes):
-            self.scalers['recipes'] = MinMaxScaler()
-            self.scalers['recipes'].fit(recipe)
-            self.recipes[ind] = self.scalers['recipes'].transform(recipe)
+            self.scalers['recipes'].append(MinMaxScaler())
+            self.scalers['recipes'][ind].fit(recipe)
+            self.recipes[ind] = self.scalers['recipes'][ind].transform(recipe)
         
         self.scalers['quant'] = MinMaxScaler()
         self.scalers['quant'].fit(self.quant.T)
