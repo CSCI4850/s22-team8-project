@@ -1,0 +1,13 @@
+Recipe,Active dry yeast,Water,Salt,Bread flour,Butter,Sugar,Egg,Dry milk,Whole wheat flour,Vegetable oil,Olive oil,Honey,Brown sugar,All-purpose flour,Milk
+"""Traditional White Bread""",5.6,236,8.6,408,14,12.6,0,8.48,0,0,0,0,0,0,0
+"""Country White Bread""",5.6,0,8.6,544,21,6.3,49.6,0,0,0,0,0,0,0,240
+"""Sourdough Starter""",6.3,472,0,0,0,0,0,0,0,0,0,0,0,240,0
+"""French Countryside Bread""",5.6,324.5,8.6,544,0,12.6,0,0,0,0,19.5,0,0,0,0
+"""Italian Herb Bread""",5.6,295,5.7,476,0,25.2,0,0,0,0,19.5,0,0,0,0
+"""White Bread""",14,265.5,5.7,408,0,12.6,0,0,0,28.6,0,0,0,0,0
+"""100% Whole Wheat Bread""",8.4,383.5,11.4,0,0,0,0,0,630,0,0,0,66.7,0,0
+"""Dough""",2.8,413,11.4,0,0,4.2,0,2.8,0,28.6,0,0,0,540,0
+"""Bagel dough""",4.2,413,8.6,0,0,0,0,0,0,0,0,10.6,0,360,0
+"""Bread Pretzel""",4.2,206.5,28.5,272,0,6.3,49.6,0,0,0,0,0,0,0,0
+"""Butter Rolls""",5.6,59,5.7,374,28,25.2,49.6,0,0,0,0,0,0,0,180
+"""Pizza Crust""",4.2,236,5.7,0,0,0,0,0,0,28.6,0,0,0,360,0
