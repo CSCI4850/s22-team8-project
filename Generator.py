@@ -67,10 +67,10 @@ class Generator:
     #   arg1 (min_scale): lower bound scale value
     #   arg2 (max_scale): upper bound scale value
     # both args can be set to same value to scale the entire dataset equally
-    def scale(self, min_scale, max_scale):
-        
+    def scale(self, min_scale, max_scale): 
         for i, recipe in enumerate(self.recipes):
             for j, ingr in enumerate(recipe):
+                
                 scalefactor = round(random.uniform(min_scale,max_scale),2)
                 if self.normalize:
                     scalefactor *= (max_scale-min_scale)/max_scale
