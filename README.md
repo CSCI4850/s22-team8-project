@@ -28,9 +28,9 @@ Taking in these nutrients:
 When processed through our network, would be able to replicate a recipe such as this:
 
 
-| Recipe	| Active dry yeast	| Water |	Salt	| Bread | Flour |	Butter |	Sugar |	Egg	| Dry milk |	Whole wheat flour |	Vegetable oil |	Olive oil |	Honey |	Brown sugar | 	All-purpose flour	| Milk |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-|"Traditional White Bread" |	5.6	| 236 |	8.6 |	408 |	14 |	12.6 |	0 |	8.48 |	0 |	0 |	0 |	0 |	0 |	0 |	0 |
+|   | Recipe                    | Bread flour | Water | Butter | Sugar | Salt | Dry milk | Active dry yeast | Egg | Whole wheat flour | Vegetable oil | Olive oil | Honey | Brown sugar | All-purpose flour | Milk |
+|---|---------------------------|-------------|-------|--------|-------|------|----------|------------------|-----|-------------------|---------------|-----------|-------|-------------|-------------------|------|
+| 1 | "Traditional White Bread" | 408         | 236   | 14     | 12.6  | 8.6  | 8.48     | 5.6              | 0   | 0                 | 0             | 0         | 0     | 0           | 0                 | 0    |
 
 ![Nutrients](/Project_Demo_Folder/images/breadnutrients.png)
 
