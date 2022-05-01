@@ -2,9 +2,9 @@
 
 ## Team #8 - Inverse Nutrition Mapping
 
-![Nutrients](/Project_Demo_Folder/images/breadnutrients.png)
+![Nutrients](/images/breadnutrients.png)
 
-![Ingredients](/Project_Demo_Folder/images/breadingredients.png)
+![Ingredients](/images/breadingredients.png)
 
 This neural network is designed to take in information from nutritional facts labels, such as the nutrient information and ingredient order, and the network will return the mass in grams of each ingredient. Specifically, this network was limited to focus on breads, so the selection of ingredients was limited to the fifteen ingredients most commonly found in bread. Similarly, the nutrient information was limited to only include nutrients that the Food and Drug Administration requires to be present on all nutritional facts labels.
 
