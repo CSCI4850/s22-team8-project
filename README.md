@@ -25,7 +25,7 @@ Taking in these nutrients:
 | 14       | All-Purpose Flour | 364           | 1           | 0.2    | 0           | 0.002  | 76.3  | 2.7     | 0.3       | 10.3    | 0        | 0.015     | 0.005 | 0.107 |
 | 15       | Milk              | 50            | 2.1         | 1.2    | 0.008       | 0.047  | 4.9   | 0       | 4.5       | 3.3     | 0.000001 | 0.119     | 0     | 0.057 |
 
-When processed through our network, would be able to replicate a recipe such as this:
+## When processed through our network, would be able to replicate a recipe such as this:
 
 
 |   | Recipe                    | Bread flour | Water | Butter | Sugar | Salt | Dry milk | Active dry yeast | Egg | Whole wheat flour | Vegetable oil | Olive oil | Honey | Brown sugar | All-purpose flour | Milk |
@@ -41,7 +41,7 @@ When processed through our network, would be able to replicate a recipe such as 
 ## Running our Demo
 
 1. You will need Python 3.0 or higher. This can be found on the Python website [here](https://www.python.org/downloads/)
-2. Our project is written in .ipynb files that require Jupyter Notebook [(Install here)](https://jupyter.org/install) to run.
+2. Our project is written in .ipynb files that require Jupyter Notebook [(install here)](https://jupyter.org/install) to run.
 3. Once inside Jupyter Notebook, a few tools will need to be imported to run a demo:
 
 ```
@@ -61,7 +61,7 @@ from IPython.display import Image
 
 We used a website to convert our ingredients to their relative nutrient values which yielded these results [here](main/nutrients.csv).
 
-We wrote a generator to generate random recipes for testing, but we also used a small list of [real recipes](main/Recipe_Data.csv) as well
+We wrote a generator to generate random recipes for testing, but we also used a small list of [real recipes](main/Recipe_Data.csv) as well.
 
 ## Let's Run the Demo!
 
