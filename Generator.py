@@ -21,88 +21,111 @@ class Generator:
         self.quant = None
         self.scalers = {}
         
-
-    # Generates n number of training examples
-    #    arg1 (datapoints): number of training examples to generate
-    #    arg2 (min_ingr): minimum number of ingredients to include in each recipe
-    #    arg3 (max_ingr): max number of ingredients to include in each recipe
-    def generate(self, datapoints, min_ingr=1, max_ingr=None):
-        
-        recipes = []
-        quant = []
-        
-        # max_ingr defaults to maximum number of possible ingredients in dataset
-        if max_ingr is None:
-            max_ingr = self.ingrs.shape[0]
-        
-        # generate datapoints number of training examples
-        for i in range(datapoints):
-        
-            # randomize num of ingredients for each recipe between lower and upper bounds
-            num_ingr = random.randint(min_ingr,max_ingr) 
-
-            # get random sample of ingredients
-            rows_ingr = random.sample(range(self.ingrs.shape[0]),num_ingr)
-            rows_ingr.sort()
-
-            recipe = np.array([])
-            # generate recipe for each line
-            for i in range(self.ingrs.shape[0]):
-                if i in rows_ingr:
-                    recipe = np.append(recipe,self.ingrs[i])
-                    quant.append(1.0) # quantity default is 1.0 if ingr exists in recipe
-                else:
-                    recipe = np.append(recipe, np.zeros(self.ingrs.shape[1]))
-                    quant.append(0.0) # quantity default is 0.0 if ingr doesnt exist in recipe
-            
-            # reshape recipe into 2D matrix
-            recipe = np.reshape(recipe,self.ingrs.shape)
-            recipes.append(recipe) # append makes recipes var a 3D matrix
-        
-        
-        self.recipes = np.array(recipes)
-        self.quant = np.array(quant).reshape((-1,self.recipes.shape[1]))
-
-    # scales each ingredient randomly lower bound and upper bound
-    #   arg1 (min_scale): lower bound scale value
-    #   arg2 (max_scale): upper bound scale value
-    # both args can be set to same value to scale the entire dataset equally
-    def scale(self, min_scale, max_scale): 
-        for i, recipe in enumerate(self.recipes):
-            for j, ingr in enumerate(recipe):
-                
-                scalefactor = round(random.uniform(min_scale,max_scale),2)
-                if self.normalize:
-                    scalefactor *= (max_scale-min_scale)/max_scale
-                
-                
-                self.recipes[i,j] *= scalefactor
-                self.quant[i,j] *= scalefactor
-                
-
-    def inv_normalize(self, quant=None):
-        if quant is None:
-            for ind, recipe in enumerate(self.recipes):
-                self.recipes[ind] = self.scalers['recipes'][ind].inverse_transform(recipe)
-
-            self.quant = (self.scalers['quant'].inverse_transform(self.quant.T)).T
-            
-        else:
-            quant = (self.scalers['quant'].inverse_transform(quant.T)).T
-            return quant
-                
-    def normalize(self):
-        self.scalers['recipes'] = []
-        
-        for ind, recipe in enumerate(self.recipes):
-            self.scalers['recipes'].append(MinMaxScaler())
-            self.scalers['recipes'][ind].fit(recipe)
-            self.recipes[ind] = self.scalers['recipes'][ind].transform(recipe)
-        
-        self.scalers['quant'] = MinMaxScaler()
-        self.scalers['quant'].fit(self.quant.T)
-        self.quant = (self.scalers['quant'].transform(self.quant.T)).T
+  
+    def generate(self,num):
+        self.quant = self._build_quantity(num)
+        self.recipes = self._build_recipes(self.quant,self.ingrs)
     
+    def _build_recipes(self,recipe_ingr,ingr_nutr):
+        recipes = []
+        
+        for i in range(recipe_ingr.shape[0]): # for each recipes
+            recipe = recipe_ingr[i]
+            for j in range(recipe_ingr.shape[1]): # for ingr quantity in recipe
+                quant = recipe[j]
+                recipes.append(quant * ingr_nutr[j])
+                
+        recipes = np.array(recipes)
+        recipes = recipes.reshape((-1,ingr_nutr.shape[0],ingr_nutr.shape[1]))
+        
+        recipe_nutrients = []
+        for recipe in recipes:
+            nutrients = []
+            for c in range(recipe.shape[1]):
+                col = recipe[:,c]
+                sum_col = np.sum(col)
+                nutrients.append(sum_col)
+            recipe_nutrients.append(nutrients)
+        
+        
+        recipe_nutrients = np.array(recipe_nutrients)
+        
+        return recipe_nutrients
+        
+    def _build_quantity(self, num_of_recipes):
+        
+        quants = []
+        ing_max = [14, 472, 28.5,544,28,25.2,49.6,8.48,630,28.6,19.5,10.6,66.7,540,240]
+        
+        for i in range(num_of_recipes):
+        
+            ingrs = np.zeros((15))
+            ingrs[0] = 1
+
+            r = random.random()
+            # Liquids
+            if r < 0.2: #1/5 chance of Milk
+                ingrs[14] = 1
+            if r >= 0.1:#9/10 chance of Water
+                ingrs[1] = 1
+
+            # Which flour?
+            r = random.random()    
+            if r < .6:
+                ingrs[3] = 1
+            elif r < .9:
+                ingrs[13] = 1
+            else:
+                ingrs[8] = 1
+                
+            # Which - if any - sweetener
+            r = random.random()
+            if r < .1:
+                ingrs[11] = 1
+            elif r < .2:
+                ingrs[12] = 1
+            elif r < .8:
+                ingrs[5] = 1
+
+            # Which - if any - lipids?
+            r = random.random()    
+            if r < .25:
+                ingrs[9] = 1
+            elif r < .5:
+                ingrs[10] = 1
+            elif r < .75:
+                ingrs[4] = 1
+
+            ingrs[2] = 1 #salt
+
+            #Egg ?
+            r = random.random()    
+            if r < .2:
+                ingrs[6] = 1
+
+            #Dry Milk ?
+            r = random.random()    
+            if r < .1:
+                ingrs[7] = 1
+
+            ingrs[0] = random.random() * 12.5 + 2.5
+            
+            #for i in range(1, 14):
+            #    if (ingrs[i] > 0):
+            #        ingrs[i] = np.random.normal(ing_averages[i], ing_stdev[i])
+            #        if (ingrs[i]) < 0:
+            #            ingrs[i] = 0
+            for i in range(0, 14):
+                ingrs[i] *= random.random() * ing_max[i] * 1.25
+                if (ingrs[i]) < 0:
+                    ingrs[i] = 0
+                        
+            quants.append(ingrs)
+            
+        
+        return np.array(quants)
+        
+
     def rank(self):
         ranked = np.zeros((self.quant.shape))
         argsort = np.argsort(self.quant)[:,::-1]
@@ -119,8 +142,5 @@ class Generator:
                 
                 ranked[i,ind2] = count
 
-            
-            
-        ranked = ranked.reshape((self.recipes.shape[0], self.recipes.shape[1], 1))
-        self.recipes = np.concatenate((self.recipes,ranked), axis = 2)
-        
+
+        self.recipes = np.concatenate((self.recipes,ranked), axis = 1)
