@@ -29,13 +29,28 @@ class RealData:
             for j in range(recipe_ingr.shape[1]): # for ingr quantity in recipe
                 quant = recipe[j]
                 recipes.append(quant * ingr_nutr[j])
-                
+               
         
-    
         recipes = np.array(recipes)
         recipes = recipes.reshape((-1,ingr_nutr.shape[0],ingr_nutr.shape[1]))
-        return recipes
-
+        
+        recipe_nutrients = []
+        for recipe in recipes:
+            nutrients = []
+            for c in range(recipe.shape[1]):
+                col = recipe[:,c]
+                sum_col = np.sum(col)
+                nutrients.append(sum_col)
+            recipe_nutrients.append(nutrients)
+        
+        
+        recipe_nutrients = np.array(recipe_nutrients)
+        
+        #print(recipes.shape)
+        
+        #print(recipes.shape)
+        
+        return recipe_nutrients
 
     def normalize(self):
         
@@ -53,10 +68,31 @@ class RealData:
     def inv_normalize(self, quant=None):
         if quant is None:
             for ind, recipe in enumerate(self.recipes):
-                self.recipes[ind] = self.scalers[ind].inverse_transform(recipe)
+                self.recipes[ind] = self.scalers['recipes'][ind].inverse_transform(recipe)
 
             self.quant = (self.scaler.inverse_transform(self.quant.T)).T
 
         else:
             quant = (self.scalers['quant'].inverse_transform(quant.T)).T
             return quant
+
+        
+    def rank(self):
+        ranked = np.zeros((self.quant.shape))
+        argsort = np.argsort(self.quant)[:,::-1]
+        
+        for i in range(0, argsort.shape[0]):
+            count = self.quant.shape[1] - 1
+            ranked[i,argsort[i,0]] = count
+            
+            for j in range(1, argsort.shape[1]):
+                ind1 = argsort[i,j-1]
+                ind2 = argsort[i,j]
+
+                count -= 1
+                
+                ranked[i,ind2] = count
+
+
+        #ranked = ranked.reshape((self.recipes.shape[0], self.recipes.shape[1], 1))
+        self.recipes = np.concatenate((self.recipes,ranked), axis = 1)
